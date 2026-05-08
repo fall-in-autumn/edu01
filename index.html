@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>독도 수호 연대기 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Noto+Sans+KR:wght@300;400;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        .preserve-3d {
+            transform-style: preserve-3d;
+        }
+
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        .flash-card {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .flash-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 selection:bg-blue-100 overflow-x-hidden">
+
+    <!-- 1. Hero Section -->
+    <section class="relative min-h-[85vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden border-b border-gray-50">
+        <div class="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:32px_32px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] -z-10 opacity-50"></div>
+        
+        <div class="max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-12 duration-1000">
+            <div class="inline-flex items-center gap-2 px-5 py-2 bg-slate-900 text-white rounded-full text-[11px] font-black tracking-[0.2em] uppercase shadow-2xl">
+                <i class="fa-solid fa-anchor text-blue-400"></i> Dokdo Sovereignty Guide
+            </div>
+            <h1 class="text-6xl md:text-8xl font-black text-gray-900 leading-[0.9] tracking-tighter">
+                역사의 땅,<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">독도를 지켜온</span><br>발자취
+            </h1>
+            <p class="text-lg text-gray-500 max-w-xl mx-auto leading-relaxed font-light">
+                해방 이후부터 현재까지, 대한민국이 독도 주권을 수호해온 <br>열정과 갈등의 연대기를 시각적으로 탐구합니다.
+            </p>
+            <div class="flex justify-center pt-8">
+                <div class="animate-bounce p-3 bg-blue-50 rounded-full text-blue-600">
+                    <i class="fa-solid fa-chevron-down text-2xl"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Flash Cards Section -->
+    <section class="max-w-6xl mx-auto px-6 py-24">
+        <div class="text-center mb-16">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold tracking-tighter uppercase bg-blue-50 text-blue-600 border border-blue-100 mb-4">Quick Learning</span>
+            <h3 class="text-3xl font-bold">클릭해서 역사적 증거를 확인해보세요</h3>
+            <p class="text-gray-400 text-sm mt-3 font-light">카드를 뒤집으면 핵심 내용을 볼 수 있습니다.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Card 1 -->
+            <div class="h-64 perspective-1000 cursor-pointer group" onclick="toggleFlip(this)">
+                <div class="flash-card relative w-full h-full preserve-3d">
+                    <!-- Front -->
+                    <div class="absolute inset-0 backface-hidden bg-blue-500 rounded-[40px] p-8 flex flex-col justify-center items-center text-center shadow-xl">
+                        <i class="fa-solid fa-rotate-right text-3xl text-white/40 mb-4 group-hover:rotate-180 transition-transform duration-700"></i>
+                        <h4 class="text-white text-xl font-bold">SCAPIN 제677호</h4>
+                    </div>
+                    <!-- Back -->
+                    <div class="absolute inset-0 backface-hidden rotate-y-180 bg-white border-2 border-gray-100 rounded-[40px] p-8 flex flex-col justify-center items-center text-center shadow-lg">
+                        <p class="text-gray-700 text-sm leading-relaxed font-medium">1946년 연합군 최고사령관 지령. 일본의 통치 범위에서 독도를 울릉도, 제주도와 함께 명확히 제외했습니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="h-64 perspective-1000 cursor-pointer group" onclick="toggleFlip(this)">
+                <div class="flash-card relative w-full h-full preserve-3d">
+                    <div class="absolute inset-0 backface-hidden bg-indigo-500 rounded-[40px] p-8 flex flex-col justify-center items-center text-center shadow-xl">
+                        <i class="fa-solid fa-rotate-right text-3xl text-white/40 mb-4 group-hover:rotate-180 transition-transform duration-700"></i>
+                        <h4 class="text-white text-xl font-bold">1947년 조약 초안</h4>
+                    </div>
+                    <div class="absolute inset-0 backface-hidden rotate-y-180 bg-white border-2 border-gray-100 rounded-[40px] p-8 flex flex-col justify-center items-center text-center shadow-lg">
+                        <p class="text-gray-700 text-sm leading-relaxed font-medium">샌프란시스코 조약 1차 초안 제4조. 일본이 포기할 섬으로 '리앙쿠르암(독도)'을 명시했습니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="h-64 perspective-1000 cursor-pointer group" onclick="toggleFlip(this)">
+                <div class="flash-card relative w-full h-full preserve-3d">
+                    <div class="absolute inset-0 backface-hidden bg-slate-800 rounded-[40px] p-8 flex flex-col justify-center items-center text-center shadow-xl">
+                        <i class="fa-solid fa-rotate-right text-3xl text-white/40 mb-4 group-hover:rotate-180 transition-transform duration-700"></i>
+                        <h4 class="text-white text-xl font-bold">1950년 합의 부속지도</h4>
+                    </div>
+                    <div class="absolute inset-0 backface-hidden rotate-y-180 bg-white border-2 border-gray-100 rounded-[40px] p-8 flex flex-col justify-center items-center text-center shadow-lg">
+                        <p class="text-gray-700 text-sm leading-relaxed font-medium">48개 연합국이 합의한 문서. 독도를 한국에 반환할 영토로 처리하며 국제적 인식을 확고히 했습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Section 1 Content -->
+    <section class="max-w-6xl mx-auto px-6 py-24 border-t border-gray-100">
+        <div class="mb-16">
+            <span class="text-blue-600 font-black text-sm tracking-widest uppercase mb-2 block">Section 01</span>
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">갈등의 서막: 전후 질서 재편</h2>
+            <p class="text-gray-500 font-light leading-relaxed max-w-2xl">연합군은 독도를 명백히 한국 영토로 인식했습니다. 일본의 로비가 시작되기 전까지의 기록을 확인해 보세요.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-12 items-center mb-24">
+            <div class="space-y-6">
+                <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                    <h4 class="font-bold text-xl mb-2 flex items-center gap-3">
+                        <i class="fa-solid fa-scale-balanced text-blue-600"></i> 로비 이전의 진실
+                    </h4>
+                    <p class="text-sm text-gray-600 leading-relaxed italic">"위 세 문서의 공통점은 일본의 로비가 효력을 발휘하기 전, 연합국이 독도를 대한민국의 영토로 일관되게 인정하고 있었다는 역사적 사실입니다."</p>
+                </div>
+                <div class="flex items-center gap-4 p-5 bg-white border border-gray-100 rounded-3xl hover:shadow-lg transition-shadow">
+                    <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 font-bold">1</div>
+                    <p class="text-sm font-medium">연합국의 초기 의사는 독도 반환에 있었음</p>
+                </div>
+                <div class="flex items-center gap-4 p-5 bg-white border border-gray-100 rounded-3xl hover:shadow-lg transition-shadow">
+                    <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 font-bold">2</div>
+                    <p class="text-sm font-medium">일본의 로비로 인한 기술적 모호성의 발생</p>
+                </div>
+            </div>
+            <div class="bg-slate-900 rounded-[48px] p-10 text-white shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-20 -top-20 w-64 h-64 bg-blue-600/20 blur-[80px] rounded-full"></div>
+                <h4 class="text-2xl font-bold mb-8">샌프란시스코 강화조약 비교</h4>
+                <div class="space-y-6">
+                    <div class="border-b border-white/10 pb-4">
+                        <p class="text-blue-400 text-[10px] font-black uppercase mb-1">1차 초안 (1947)</p>
+                        <p class="text-lg font-bold">독도(리앙쿠르암) 명시적 포함</p>
+                    </div>
+                    <div>
+                        <p class="text-red-400 text-[10px] font-black uppercase mb-1">최종본 (1951)</p>
+                        <p class="text-lg font-bold opacity-60">주요 섬만 언급 (독도 명기 누락)</p>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-4 leading-relaxed">* 이 누락은 일본의 집요한 외교적 로비 결과로 평가받습니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Section 2: Peace Line -->
+    <section class="bg-slate-950 text-white py-32 overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row gap-16 items-center">
+                <div class="md:w-1/2 space-y-6">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold tracking-tighter uppercase bg-blue-900/40 text-blue-400 border border-blue-500/30 mb-2">1952-1965</span>
+                    <h2 class="text-4xl md:text-5xl font-black leading-tight">주권의 수호:<br>평화선과 기본조약</h2>
+                    <p class="text-slate-400 font-light leading-relaxed">
+                        일본의 대거 침범이 예상되자, 이승만 대통령은 우리 어업권과 영해를 지키기 위해 평화선을 대외에 선포했습니다.
+                    </p>
+                    <div class="space-y-4 pt-4">
+                        <div class="flex items-start gap-4 p-5 bg-white/5 rounded-3xl border border-white/10">
+                            <i class="fa-solid fa-shield-halved text-blue-400 mt-1"></i>
+                            <div>
+                                <h5 class="font-bold mb-1 italic">평화선(이승만 라인) 선포</h5>
+                                <p class="text-xs text-slate-500">독도 기점 8해리 영해 간주 및 어족 자원 보호</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-5 bg-white/5 rounded-3xl border border-white/10">
+                            <i class="fa-solid fa-clock-rotate-left text-blue-400 mt-1"></i>
+                            <div>
+                                <h5 class="font-bold mb-1 italic">독도 밀약 (1965)</h5>
+                                <p class="text-xs text-slate-500">국교 정상화를 위해 영유권 문제를 잠정 유예한 합의</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 relative">
+                    <div class="bg-gradient-to-br from-blue-700 to-indigo-900 p-12 rounded-[60px] shadow-2xl md:rotate-3 relative z-10 border border-white/10">
+                        <h4 class="text-2xl font-bold mb-6 italic"><i class="fa-solid fa-scroll mr-2 opacity-50"></i> 밀약의 4대 합의</h4>
+                        <ul class="space-y-4 text-sm text-blue-100 font-light">
+                            <li class="flex gap-2"><span class="font-black text-blue-300">01</span> 각자의 주장을 서로 부정하지 않는다.</li>
+                            <li class="flex gap-2"><span class="font-black text-blue-300">02</span> 중복 구역은 '공동수역'으로 정한다.</li>
+                            <li class="flex gap-2"><span class="font-black text-blue-300">03</span> 한국의 점거를 유지하되 대규모 증축 자제.</li>
+                            <li class="flex gap-2"><span class="font-black text-blue-300">04</span> 양국은 이 합의를 계속 준수한다.</li>
+                        </ul>
+                    </div>
+                    <div class="absolute inset-0 bg-blue-500/20 blur-[120px] -z-10"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. EEZ Section -->
+    <section class="py-32 max-w-6xl mx-auto px-6">
+        <div class="mb-16">
+            <span class="text-blue-600 font-black text-sm tracking-widest uppercase mb-2 block">Section 03</span>
+            <h2 class="text-4xl font-bold">갈등의 재점화: 바다의 경계</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-10">
+            <div class="p-12 bg-white border border-gray-100 rounded-[56px] shadow-sm relative overflow-hidden group">
+                <i class="fa-solid fa-earth-asia absolute top-10 right-10 text-9xl text-blue-50 opacity-10 -z-10 group-hover:scale-110 transition-transform"></i>
+                <h4 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <span class="w-2 h-8 bg-blue-600 rounded-full"></span> EEZ의 등장
+                </h4>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6">
+                    연안으로부터 200해리 내의 모든 자원을 독점적으로 관리하는 수역입니다. 한일 양국이 겹치면서 <b>신한일 어업협정</b>이 체결되었고, '중간수역' 개념이 도입되었습니다.
+                </p>
+                <div class="p-6 bg-blue-50 rounded-3xl">
+                    <p class="text-xs text-blue-800 font-bold leading-relaxed italic">"독도가 중간수역에 포함되며 주권 훼손 논란이 있었으나, 대화퇴 어장 조업 등 실무적 필요가 컸습니다."</p>
+                </div>
+            </div>
+            <div class="p-12 bg-slate-50 rounded-[56px] border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <h4 class="text-2xl font-bold mb-6 italic"><i class="fa-solid fa-chart-line mr-2 opacity-30"></i> 시마네현의 불만</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-8 font-light">
+                        중간수역 공동 조업으로 일본 어민들의 어획량이 급감했습니다. (2004년 홍게 36% 감소 등) 이 경제적 타격은 곧 정치적 도발인 '다케시마의 날'로 이어집니다.
+                    </p>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between text-[10px] font-black uppercase tracking-wider px-2">
+                        <span>어획량 감소율</span>
+                        <span class="text-red-600">-75%</span>
+                    </div>
+                    <div class="h-3 w-full bg-gray-200 rounded-full overflow-hidden p-0.5">
+                        <div class="h-full bg-red-500 rounded-full w-3/4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Education Conflict -->
+    <section class="bg-slate-50 py-32">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-4 tracking-tighter">세대 간 전이되는 왜곡</h2>
+                <p class="text-gray-500 font-light">일본의 교육 정책은 시간이 흐를수록 더 공격적으로 변하고 있습니다.</p>
+            </div>
+
+            <div class="bg-white rounded-[60px] shadow-2xl overflow-hidden border border-gray-100">
+                <div class="grid md:grid-cols-2 divide-x divide-gray-50">
+                    <div class="p-16 bg-slate-900 text-white relative">
+                        <h4 class="text-2xl font-bold mb-10 flex items-center gap-3">
+                            <i class="fa-solid fa-book text-blue-400"></i> 제도화의 타임라인
+                        </h4>
+                        <div class="space-y-10">
+                            <div class="relative pl-8 border-l-2 border-blue-500">
+                                <div class="absolute -left-[9px] top-0 w-4 h-4 bg-blue-500 rounded-full border-4 border-slate-900"></div>
+                                <span class="text-xs font-black text-blue-400 block mb-1">2008년</span>
+                                <p class="text-sm font-medium">학습지도요령 개정: 독도 영유권 교육 의무화</p>
+                            </div>
+                            <div class="relative pl-8 border-l-2 border-slate-700">
+                                <div class="absolute -left-[9px] top-0 w-4 h-4 bg-slate-700 rounded-full border-4 border-slate-900"></div>
+                                <span class="text-xs font-black text-slate-500 block mb-1">2011년</span>
+                                <p class="text-sm font-medium italic opacity-70">중학교 교과서 '고유 영토' 주장 본격 수록</p>
+                            </div>
+                            <div class="relative pl-8 border-l-2 border-slate-700">
+                                <div class="absolute -left-[9px] top-0 w-4 h-4 bg-slate-700 rounded-full border-4 border-slate-900"></div>
+                                <span class="text-xs font-black text-slate-500 block mb-1">2015년~현재</span>
+                                <p class="text-sm font-medium italic opacity-70">모든 교과서 '불법 점거' 표현 및 항의 내용 포함</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-16 bg-white flex flex-col justify-center">
+                        <h4 class="text-2xl font-bold mb-8">서술 기술의 악화</h4>
+                        <div class="space-y-6">
+                            <div class="p-6 bg-blue-50 rounded-3xl border-l-[6px] border-blue-500">
+                                <span class="text-[10px] font-black text-blue-600 block mb-2 tracking-widest uppercase">2010년판</span>
+                                <p class="text-sm text-gray-600 leading-relaxed italic">기본조약 체결 및 한일 교류, 미래 지향적 관계 서술</p>
+                            </div>
+                            <div class="flex justify-center py-2"><i class="fa-solid fa-arrow-down text-gray-200 text-xl"></i></div>
+                            <div class="p-6 bg-red-50 rounded-3xl border-l-[6px] border-red-500">
+                                <span class="text-[10px] font-black text-red-600 block mb-2 tracking-widest uppercase">현재</span>
+                                <p class="text-sm text-red-900 font-bold leading-relaxed">"일본의 고유 영토인 독도를 한국이 불법 점거하고 있다"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Conclusion: Special Message -->
+    <section class="py-32 max-w-4xl mx-auto px-6 text-center">
+        <div class="mb-10 inline-flex p-6 bg-red-50 text-red-600 rounded-full animate-pulse shadow-inner">
+            <i class="fa-solid fa-triangle-exclamation text-4xl"></i>
+        </div>
+        <h2 class="text-4xl md:text-6xl font-black mb-10 leading-[1.1] tracking-tight text-slate-900">
+            "독도는 우리에게 <br>단순한 영토가 아닙니다."
+        </h2>
+        <p class="text-gray-500 text-lg font-light mb-16 italic max-w-2xl mx-auto leading-relaxed">
+            독도는 일본의 한반도 침탈 과정에서 가장 먼저 강점당했던 <br class="hidden md:block"> '우리 역사의 증거'이자 대한민국 주권의 상징입니다.
+        </p>
+        <div class="p-12 bg-slate-950 text-white rounded-[64px] text-left shadow-3xl relative overflow-hidden">
+            <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-blue-600/10 blur-[100px] rounded-full"></div>
+            <div class="flex flex-col md:flex-row justify-between items-end gap-8 relative z-10">
+                <div class="max-w-md">
+                    <h5 class="text-blue-400 font-black text-xs uppercase tracking-widest mb-4">Final Perspective</h5>
+                    <p class="text-sm text-slate-400 leading-relaxed font-light mb-6">
+                        한국에게 독도는 <b>역사 정의</b>의 문제이나, 일본에게는 <b>정치적/경제적</b> 쟁점입니다. 이 비대칭성을 이해하고 논리적으로 대응하는 것이 우리의 과제입니다.
+                    </p>
+                </div>
+                <a href="#" class="px-8 py-4 bg-white text-slate-950 rounded-full text-xs font-black uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all transform hover:scale-105 active:scale-95 shadow-xl">
+                    수업 자료 더보기 <i class="fa-solid fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 border-t border-gray-100 bg-white">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
+            <div class="text-center md:text-left">
+                <div class="flex items-center gap-3 mb-4 justify-center md:justify-start">
+                    <i class="fa-solid fa-flag-checkered text-blue-600 text-2xl"></i>
+                    <span class="font-black tracking-tighter text-2xl italic uppercase">Truth of Dokdo</span>
+                </div>
+                <p class="text-gray-400 text-xs font-medium tracking-wide">© 2026 의리T의 도덕 수업 아카이브</p>
+                <p class="text-[9px] text-gray-300 mt-2 uppercase tracking-[0.3em] font-black">Designed for Ethical Leadership</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-3">
+                <span class="px-5 py-2 bg-slate-50 text-slate-400 text-[10px] font-black rounded-full border border-slate-100">HISTORY</span>
+                <span class="px-5 py-2 bg-slate-50 text-slate-400 text-[10px] font-black rounded-full border border-slate-100">SOVEREIGNTY</span>
+                <span class="px-5 py-2 bg-slate-50 text-slate-400 text-[10px] font-black rounded-full border border-slate-100">PEACE</span>
+                <span class="px-5 py-2 bg-slate-50 text-slate-400 text-[10px] font-black rounded-full border border-slate-100">ETHICS</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleFlip(element) {
+            const card = element.querySelector('.flash-card');
+            card.classList.toggle('flipped');
+        }
+    </script>
+</body>
+</html>
