@@ -47,12 +47,28 @@
             width: 0%;
             transition: width 0.5s ease;
         }
+
+        .main-btn {
+            transition: all 0.2s ease;
+        }
+        .main-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body class="text-slate-800">
 
     <!-- Header -->
     <header class="bg-blue-600 text-white py-8 px-4 text-center shadow-lg relative overflow-hidden">
+        <!-- Main Button (Added) -->
+        <div class="absolute top-4 left-4 z-20">
+            <a href="../index.html" class="main-btn flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg font-bold text-sm text-white no-underline">
+                <i class="fas fa-home"></i>
+                <span>메인(main)</span>
+            </a>
+        </div>
+
         <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
             <i class="fas fa-ship absolute top-10 left-10 text-4xl"></i>
             <i class="fas fa-water absolute bottom-5 right-20 text-4xl"></i>
