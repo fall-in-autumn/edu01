@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>독도 수호 대작전 - 인터랙티브 백과</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;400;700;900&display=swap');
+        
+        body {
+            font-family: 'Gothic A1', sans-serif;
+            background: linear-gradient(to bottom, #e0f2fe, #f0f9ff);
+            min-height: 100vh;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .island-shape {
+            filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #3b82f6;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-blue-600 text-white py-8 px-4 text-center shadow-lg relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <i class="fas fa-ship absolute top-10 left-10 text-4xl"></i>
+            <i class="fas fa-water absolute bottom-5 right-20 text-4xl"></i>
+        </div>
+        <h1 class="text-3xl font-black mb-2">🌊 독도 수호 대작전</h1>
+        <p class="text-blue-100">중학생을 위한 인터랙티브 영토 수호 백과사전</p>
+    </header>
+
+    <!-- Main Navigation -->
+    <nav class="max-w-4xl mx-auto mt-6 px-4">
+        <div class="flex flex-wrap gap-2 justify-center">
+            <button onclick="showTab('geo')" class="nav-btn active bg-white border-2 border-blue-500 text-blue-600 px-6 py-2 rounded-full font-bold hover:bg-blue-50 transition shadow-sm" id="btn-geo">
+                <i class="fas fa-map-marked-alt mr-2"></i>지리·환경
+            </button>
+            <button onclick="showTab('history')" class="nav-btn bg-white border-2 border-blue-200 text-slate-500 px-6 py-2 rounded-full font-bold hover:bg-blue-50 transition shadow-sm" id="btn-history">
+                <i class="fas fa-book-open mr-2"></i>역사·사료
+            </button>
+            <button onclick="showTab('modern')" class="nav-btn bg-white border-2 border-blue-200 text-slate-500 px-6 py-2 rounded-full font-bold hover:bg-blue-50 transition shadow-sm" id="btn-modern">
+                <i class="fas fa-shield-alt mr-2"></i>갈등·수호
+            </button>
+            <button onclick="showTab('quiz')" class="nav-btn bg-yellow-400 text-yellow-900 px-6 py-2 rounded-full font-bold hover:bg-yellow-300 transition shadow-sm" id="btn-quiz">
+                <i class="fas fa-pen-nib mr-2"></i>수호자 퀴즈
+            </button>
+        </div>
+    </nav>
+
+    <!-- Content Sections -->
+    <main class="max-w-5xl mx-auto p-6">
+        
+        <!-- Tab 1: Geography -->
+        <section id="geo" class="tab-content active space-y-6">
+            <div class="grid md:grid-cols-2 gap-8 items-center bg-white p-8 rounded-3xl shadow-xl border border-blue-100">
+                <div>
+                    <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b-4 border-blue-200 inline-block">1. 독도의 영역과 자원</h2>
+                    <ul class="space-y-4 mt-6">
+                        <li class="p-4 bg-blue-50 rounded-xl card-hover">
+                            <span class="font-bold text-lg text-blue-800">📍 영토·영해·영공</span>
+                            <p class="text-slate-600 text-sm mt-1">우리 주권이 미치는 하늘과 바다의 범위! 독도는 영해 기선에서 12해리까지 우리 바다입니다.</p>
+                        </li>
+                        <li class="p-4 bg-green-50 rounded-xl card-hover">
+                            <span class="font-bold text-lg text-green-800">💎 가스 하이드레이트</span>
+                            <p class="text-slate-600 text-sm mt-1">'불타는 얼음'이라 불리는 미래 에너지 자원! 독도 주변 해저에 엄청난 양이 묻혀 있어요.</p>
+                        </li>
+                        <li class="p-4 bg-amber-50 rounded-xl card-hover">
+                            <span class="font-bold text-lg text-amber-800">🌐 배타적 경제수역(EEZ)</span>
+                            <p class="text-slate-600 text-sm mt-1">자원을 탐사하고 관리할 수 있는 경제적 권리의 바다 영역(200해리)입니다.</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="text-center">
+                    <div class="bg-blue-100 rounded-full p-10 inline-block island-shape">
+                        <i class="fas fa-mountain text-8xl text-blue-600"></i>
+                    </div>
+                    <p class="mt-4 font-medium text-slate-500 italic">"동해의 보물섬, 독도의 환경"</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 2: History -->
+        <section id="history" class="tab-content space-y-6">
+            <h2 class="text-2xl font-bold text-indigo-700 mb-4">📜 역사 속 독도의 이름과 기록</h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-indigo-500 card-hover">
+                    <h3 class="font-bold text-indigo-600 mb-2">우산도(于山島)</h3>
+                    <p class="text-sm text-slate-600">『세종실록지리지』 등 고문헌에 기록된 독도의 옛 이름입니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-indigo-500 card-hover">
+                    <h3 class="font-bold text-indigo-600 mb-2">태정관 지령(1877)</h3>
+                    <p class="text-sm text-slate-600">일본의 최고 기관조차 "독도는 일본과 상관없다"고 인정한 결정적 증거!</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-indigo-500 card-hover">
+                    <h3 class="font-bold text-indigo-600 mb-2">대한제국 칙령 41호</h3>
+                    <p class="text-sm text-slate-600">1900년, 고종 황제가 법적으로 독도가 우리 영토임을 전 세계에 공포했습니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-indigo-500 card-hover">
+                    <h3 class="font-bold text-indigo-600 mb-2">석도(石島)</h3>
+                    <p class="text-sm text-slate-600">'돌섬'이라는 뜻으로, 칙령 제41호에서 독도를 지칭한 표현입니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 3: Modern/Defense -->
+        <section id="modern" class="tab-content space-y-6">
+            <div class="bg-white p-8 rounded-3xl shadow-xl overflow-hidden relative">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <i class="fas fa-user-shield text-9xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-red-600 mb-6">🛡️ 독도를 지키는 힘과 사람들</h2>
+                
+                <div class="space-y-6 relative z-10">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-red-100 text-red-600 p-3 rounded-full"><i class="fas fa-users"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">독도의용수비대</h4>
+                            <p class="text-slate-600">6·25 전쟁의 혼란 속에서 우리 손으로 독도를 지켜낸 민간인 영웅들입니다.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-full"><i class="fas fa-home"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">실효적 지배</h4>
+                            <p class="text-slate-600">우리가 실제로 독도에 살고(최종덕 님 등), 경찰이 지키고 있는 상태를 말해요.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="bg-emerald-100 text-emerald-600 p-3 rounded-full"><i class="fas fa-flag"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">평화선 (1952)</h4>
+                            <p class="text-slate-600">대한민국 정부가 독도를 포함해 바다의 경계를 긋고 우리 권리를 선포한 선입니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 4: Quiz -->
+        <section id="quiz" class="tab-content space-y-6">
+            <div class="max-w-2xl mx-auto bg-white p-8 rounded-3xl shadow-2xl border-2 border-yellow-200">
+                <div id="quiz-start">
+                    <div class="text-center">
+                        <i class="fas fa-medal text-6xl text-yellow-400 mb-4"></i>
+                        <h2 class="text-2xl font-bold mb-4">독도 명예수호자 자격 시험</h2>
+                        <p class="text-slate-600 mb-6">배운 내용을 바탕으로 퀴즈를 풀고 수호 뱃지를 획득하세요!</p>
+                        <button onclick="startQuiz()" class="bg-yellow-500 text-white font-bold px-8 py-3 rounded-xl hover:bg-yellow-600 transition shadow-lg">퀴즈 시작하기</button>
+                    </div>
+                </div>
+
+                <div id="quiz-container" class="hidden">
+                    <div class="mb-4 flex justify-between items-center">
+                        <span id="question-count" class="font-bold text-yellow-600">질문 1/3</span>
+                        <div class="w-32 progress-bar">
+                            <div id="quiz-progress" class="progress-fill"></div>
+                        </div>
+                    </div>
+                    <h3 id="question-text" class="text-xl font-bold mb-6 min-h-[60px]">질문 내용이 여기에 나타납니다.</h3>
+                    <div id="quiz-options" class="grid grid-cols-1 gap-3">
+                        <!-- Options injected here -->
+                    </div>
+                </div>
+
+                <div id="quiz-result" class="hidden text-center">
+                    <i class="fas fa-award text-7xl text-yellow-500 mb-4"></i>
+                    <h2 class="text-3xl font-black text-slate-800 mb-2">축하합니다!</h2>
+                    <p class="text-lg text-slate-600 mb-6">당신은 독도의 소중함을 아는 <br><span class="font-bold text-blue-600">"독도 명예 수호자"</span>입니다!</p>
+                    <button onclick="resetQuiz()" class="text-slate-500 underline">다시 풀기</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-12 py-8 bg-slate-800 text-white text-center">
+        <p class="text-slate-400 text-sm mb-2">독도는 대한민국의 고유 영토입니다.</p>
+        <p class="text-slate-500 text-xs">© 2024 독도 수호 대작전 - 의리T 교육 자료</p>
+    </footer>
+
+    <!-- Message Modal -->
+    <div id="modal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl">
+            <div id="modal-icon" class="text-5xl mb-4"></div>
+            <h3 id="modal-title" class="text-xl font-bold mb-2"></h3>
+            <p id="modal-desc" class="text-slate-600 mb-6"></p>
+            <button onclick="closeModal()" class="w-full bg-slate-800 text-white font-bold py-2 rounded-xl">확인</button>
+        </div>
+    </div>
+
+    <script>
+        // Tab System
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('border-blue-500', 'text-blue-600');
+                btn.classList.add('border-blue-200', 'text-slate-500');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('border-blue-200', 'text-slate-500');
+            activeBtn.classList.add('border-blue-500', 'text-blue-600');
+        }
+
+        // Quiz Logic
+        const quizData = [
+            {
+                q: "1900년 고종 황제가 독도가 우리 땅임을 공포한 법령의 이름은?",
+                a: ["대한제국 칙령 제41호", "태정관 지령", "평화선 선언"],
+                correct: 0,
+                desc: "대한제국 칙령 제41호는 독도를 울도군의 관할 구역으로 명시한 공식 법령입니다."
+            },
+            {
+                q: "독도 주변 해저에 매장된 '불타는 얼음'이라 불리는 자원의 이름은?",
+                a: ["석탄", "천연가스", "가스 하이드레이트"],
+                correct: 2,
+                desc: "가스 하이드레이트는 미래의 소중한 고체 에너지 자원입니다."
+            },
+            {
+                q: "1877년 일본 최고 기관이 '독도는 일본과 관계없다'고 확인한 문서는?",
+                a: ["시마네현 고시", "태정관 지령", "SCAPIN 제677호"],
+                correct: 1,
+                desc: "태정관 지령은 일본 스스로 독도가 한국 땅임을 인정한 결정적 자료입니다."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function startQuiz() {
+            document.getElementById('quiz-start').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const quiz = quizData[currentQuestion];
+            document.getElementById('question-count').innerText = `질문 ${currentQuestion + 1}/${quizData.length}`;
+            document.getElementById('question-text').innerText = quiz.q;
+            document.getElementById('quiz-progress').style.width = `${((currentQuestion) / quizData.length) * 100}%`;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            quiz.a.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border-2 border-slate-100 hover:border-yellow-400 hover:bg-yellow-50 transition font-medium";
+                btn.innerText = `${idx + 1}. ${opt}`;
+                btn.onclick = () => checkAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(idx) {
+            const quiz = quizData[currentQuestion];
+            if (idx === quiz.correct) {
+                showModal('✅ 정답입니다!', quiz.desc, 'text-green-500');
+                score++;
+            } else {
+                showModal('❌ 틀렸습니다!', `정답은 "${quiz.a[quiz.correct]}" 입니다.\n${quiz.desc}`, 'text-red-500');
+            }
+
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            document.getElementById('quiz-progress').style.width = '100%';
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-start').classList.remove('hidden');
+        }
+
+        // Modal Controls
+        function showModal(title, desc, colorClass) {
+            const modal = document.getElementById('modal');
+            const icon = document.getElementById('modal-icon');
+            
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-title').className = `text-xl font-bold mb-2 ${colorClass}`;
+            document.getElementById('modal-desc').innerText = desc;
+            
+            icon.innerText = title.includes('정답') ? "⭐" : "💡";
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
