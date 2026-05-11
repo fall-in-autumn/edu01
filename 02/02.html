@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>의리T와 함께하는 독도 수호대 퀴즈</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+        body {
+            font-family: 'Jua', sans-serif;
+            background: linear-gradient(180deg, #e0f2fe 0%, #7dd3fc 100%);
+            min-height: 100vh;
+        }
+        .card {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .option-btn {
+            transition: all 0.2s;
+        }
+        .option-btn:active {
+            transform: scale(0.95);
+        }
+        .ocean-waves {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('https://www.transparenttextures.com/patterns/waves.png');
+            opacity: 0.3;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4">
+
+    <div id="game-container" class="max-w-2xl w-full bg-white rounded-3xl p-8 card relative overflow-hidden">
+        <!-- Start Screen -->
+        <div id="start-screen" class="text-center">
+            <h1 class="text-4xl text-blue-600 mb-6">🇰🇷 독도 수호대 퀴즈</h1>
+            <p class="text-xl text-gray-600 mb-8">의리T와 함께 우리 땅 독도에 대해 알아볼까요?<br>중학교 1학년 수준의 알쏭달쏭 퀴즈!</p>
+            <button onclick="startGame()" class="bg-blue-500 hover:bg-blue-600 text-white text-2xl py-3 px-10 rounded-full shadow-lg">
+                수호대 입학하기
+            </button>
+            <div class="mt-8 text-gray-400">#우리땅독도 #의리T #도덕수업</div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <span id="progress" class="text-blue-500 font-bold">문제 1/5</span>
+                <span id="score-display" class="text-orange-500 font-bold">점수: 0</span>
+            </div>
+            
+            <div id="question-box" class="mb-8">
+                <h2 id="question-text" class="text-2xl text-gray-800 mb-4">질문 내용이 여기에 표시됩니다.</h2>
+            </div>
+
+            <div id="options-container" class="grid grid-cols-1 gap-4">
+                <!-- Options will be inserted here -->
+            </div>
+
+            <!-- Feedback Area -->
+            <div id="feedback" class="hidden mt-6 p-4 rounded-xl text-center font-bold text-lg">
+            </div>
+            
+            <button id="next-btn" onclick="nextQuestion()" class="hidden mt-6 w-full bg-blue-500 text-white py-3 rounded-xl hover:bg-blue-600">
+                다음 문제로
+            </button>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden text-center">
+            <h2 class="text-3xl text-blue-600 mb-4">훌륭합니다!</h2>
+            <div class="text-6xl mb-6">🎉</div>
+            <p id="final-score" class="text-2xl mb-8">당신의 점수는 100점입니다!</p>
+            <p id="rank-text" class="text-xl text-gray-600 mb-8">당신은 이제 진정한 독도 수호대입니다.</p>
+            <button onclick="location.reload()" class="bg-orange-500 hover:bg-orange-600 text-white py-3 px-10 rounded-full shadow-lg">
+                다시 도전하기
+            </button>
+        </div>
+    </div>
+
+    <div class="ocean-waves"></div>
+
+    <script>
+        const quizData = [
+            {
+                question: "독도의 행정 구역상 주소는 어디일까요?",
+                options: ["강원도 삼척시", "경상북도 울릉군", "경상남도 거제시", "제주특별자치도"],
+                correct: 1,
+                explanation: "독도는 '경상북도 울릉군 울릉읍 독도리 1~96번지'에 속해 있습니다!"
+            },
+            {
+                question: "독도를 구성하는 두 개의 큰 섬 이름은 무엇일까요?",
+                options: ["큰섬과 작은섬", "상도와 하도", "동도와 서도", "남도와 북도"],
+                correct: 2,
+                explanation: "독도는 동도와 서도, 그리고 89개의 작은 부속 도서로 이루어져 있습니다."
+            },
+            {
+                question: "조선 시대에 일본으로 건너가 울릉도와 독도가 조선의 땅임을 확답받고 온 인물은?",
+                options: ["이순신", "안용복", "장보고", "김정호"],
+                correct: 1,
+                explanation: "안용복은 일본에 건너가 우리 영토임을 강력하게 주장하여 일본으로부터 확답을 받아낸 영웅입니다."
+            },
+            {
+                question: "독도가 우리 영토임을 증명하는 가장 오래된 지리서 중 하나인 '세종실록지리지'에는 독도가 어떤 이름으로 기록되어 있을까요?",
+                options: ["우산도", "자산도", "삼봉도", "가지도"],
+                correct: 0,
+                explanation: "세종실록지리지에는 '우산(독도)과 무릉(울릉) 두 섬이 현의 정동쪽 바다에 있다'고 기록되어 있습니다."
+            },
+            {
+                question: "독도 근처 바다에 매장되어 있는 '불타는 얼음'이라 불리는 자원의 이름은?",
+                options: ["천연가스", "메탄하이드레이트", "석유", "리튬"],
+                correct: 1,
+                explanation: "독도 하이드레이트는 미래의 에너지 자원으로 큰 기대를 모으고 있습니다."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        function startGame() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            canAnswer = true;
+            const data = quizData[currentQuestion];
+            document.getElementById('progress').innerText = `문제 ${currentQuestion + 1}/${quizData.length}`;
+            document.getElementById('question-text').innerText = data.question;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+
+            data.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-btn w-full p-4 text-left border-2 border-gray-100 rounded-xl hover:bg-blue-50 hover:border-blue-300';
+                button.innerText = `${index + 1}. ${option}`;
+                button.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(index) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const data = quizData[currentQuestion];
+            const feedback = document.getElementById('feedback');
+            const buttons = document.querySelectorAll('.option-btn');
+
+            if (index === data.correct) {
+                score += 20;
+                feedback.innerText = `정답입니다! 🎉\n${data.explanation}`;
+                feedback.className = 'mt-6 p-4 rounded-xl text-center font-bold text-lg bg-green-100 text-green-700';
+                buttons[index].className += ' bg-green-200 border-green-500';
+            } else {
+                feedback.innerText = `아쉬워요! 정답은 ${data.correct + 1}번입니다. 💡\n${data.explanation}`;
+                feedback.className = 'mt-6 p-4 rounded-xl text-center font-bold text-lg bg-red-100 text-red-700';
+                buttons[index].className += ' bg-red-200 border-red-500';
+                buttons[data.correct].className += ' bg-green-100 border-green-300';
+            }
+
+            document.getElementById('score-display').innerText = `점수: ${score}`;
+            feedback.classList.remove('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            document.getElementById('final-score').innerText = `당신의 점수는 ${score}점입니다!`;
+            
+            let rankText = "";
+            if (score === 100) rankText = "완벽해요! 독도 명예 수호대로 임명합니다! 🏅";
+            else if (score >= 60) rankText = "훌륭해요! 독도에 대해 아주 잘 알고 계시군요! 👍";
+            else rankText = "독도에 대해 조금 더 관심을 가져볼까요? 의리T와 함께 공부해요! 📖";
+            
+            document.getElementById('rank-text').innerText = rankText;
+        }
+    </script>
+</body>
+</html>
