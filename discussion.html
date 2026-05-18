@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>모둠 토론 발언 기록장</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold">중1 모둠 토론 대항전 발언 기록장</h1>
+      <p class="text-sm text-slate-500 mt-2">교사가 토론 중 발언을 빠르게 기록하고, 결과를 CSV로 내려받을 수 있는 페이지입니다.</p>
+    </header>
+
+    <section class="bg-white rounded-2xl shadow p-5 mb-6 grid md:grid-cols-4 gap-4 items-end">
+      <label class="block">
+        <span class="text-sm font-semibold">학급/반</span>
+        <input id="className" class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="예: 1학년 3반" />
+      </label>
+      <label class="block">
+        <span class="text-sm font-semibold">토론 주제</span>
+        <input id="topic" class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="예: 학교 스마트폰 사용" />
+      </label>
+      <label class="block">
+        <span class="text-sm font-semibold">진행 시간(분)</span>
+        <input id="duration" type="number" min="1" class="mt-1 w-full border rounded-lg px-3 py-2" value="20" />
+      </label>
+      <div class="flex gap-2">
+        <button id="startBtn" class="flex-1 bg-blue-600 text-white rounded-lg px-3 py-2 font-semibold">시작</button>
+        <button id="stopBtn" class="flex-1 bg-slate-700 text-white rounded-lg px-3 py-2 font-semibold" disabled>종료</button>
+      </div>
+      <p id="timer" class="md:col-span-4 text-lg font-bold text-rose-600">남은 시간: --:--</p>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-5 mb-6">
+      <h2 class="text-xl font-bold mb-4">발언 입력</h2>
+      <form id="logForm" class="grid md:grid-cols-5 gap-3">
+        <input id="group" class="border rounded-lg px-3 py-2" placeholder="모둠 번호(예: 1)" required />
+        <input id="student" class="border rounded-lg px-3 py-2" placeholder="학생 이름" required />
+        <select id="type" class="border rounded-lg px-3 py-2">
+          <option value="주장">주장</option>
+          <option value="근거">근거</option>
+          <option value="반박">반박</option>
+          <option value="질문">질문</option>
+          <option value="정리">정리</option>
+        </select>
+        <input id="seconds" type="number" min="1" class="border rounded-lg px-3 py-2" placeholder="발언 시간(초)" required />
+        <button class="bg-emerald-600 text-white rounded-lg px-3 py-2 font-semibold">기록 추가</button>
+        <textarea id="content" class="md:col-span-5 border rounded-lg px-3 py-2" rows="3" placeholder="핵심 발언 내용" required></textarea>
+      </form>
+    </section>
+
+    <section class="grid lg:grid-cols-3 gap-4 mb-6">
+      <article class="bg-white rounded-2xl shadow p-4">
+        <h3 class="font-bold">전체 요약</h3>
+        <p class="mt-2 text-sm">총 발언 수: <span id="totalCount" class="font-bold">0</span>회</p>
+        <p class="text-sm">누적 발언 시간: <span id="totalSec" class="font-bold">0</span>초</p>
+      </article>
+      <article class="bg-white rounded-2xl shadow p-4 lg:col-span-2">
+        <h3 class="font-bold mb-2">모둠별 발언 횟수</h3>
+        <div id="groupStats" class="text-sm text-slate-600">아직 기록이 없습니다.</div>
+      </article>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-5">
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="text-xl font-bold">발언 기록</h2>
+        <div class="flex gap-2">
+          <button id="downloadCsv" class="bg-indigo-600 text-white rounded-lg px-3 py-2 text-sm font-semibold">CSV 다운로드</button>
+          <button id="resetBtn" class="bg-rose-600 text-white rounded-lg px-3 py-2 text-sm font-semibold">전체 초기화</button>
+        </div>
+      </div>
+      <div class="overflow-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-slate-100">
+              <th class="border p-2">시각</th><th class="border p-2">모둠</th><th class="border p-2">이름</th><th class="border p-2">유형</th><th class="border p-2">시간(초)</th><th class="border p-2">내용</th><th class="border p-2">삭제</th>
+            </tr>
+          </thead>
+          <tbody id="logTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const logs = [];
+    let timerInterval = null;
+    let remaining = 0;
+
+    const ids = (id) => document.getElementById(id);
+
+    function nowString() {
+      return new Date().toLocaleTimeString('ko-KR', { hour12: false });
+    }
+
+    function render() {
+      const tbody = ids('logTable');
+      tbody.innerHTML = '';
+      let totalSec = 0;
+      const groups = {};
+
+      logs.forEach((item, idx) => {
+        totalSec += item.seconds;
+        groups[item.group] = (groups[item.group] || 0) + 1;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="border p-2">${item.time}</td>
+          <td class="border p-2">${item.group}</td>
+          <td class="border p-2">${item.student}</td>
+          <td class="border p-2">${item.type}</td>
+          <td class="border p-2 text-right">${item.seconds}</td>
+          <td class="border p-2">${item.content}</td>
+          <td class="border p-2 text-center"><button class="text-rose-600 font-bold" data-idx="${idx}">X</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      ids('totalCount').textContent = logs.length;
+      ids('totalSec').textContent = totalSec;
+      const groupEntries = Object.entries(groups);
+      ids('groupStats').innerHTML = groupEntries.length
+        ? groupEntries.map(([g, c]) => `모둠 ${g}: <b>${c}회</b>`).join(' · ')
+        : '아직 기록이 없습니다.';
+    }
+
+    function tick() {
+      if (remaining <= 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        ids('timer').textContent = '시간 종료!';
+        ids('timer').className = 'md:col-span-4 text-lg font-bold text-red-700';
+        ids('startBtn').disabled = false;
+        ids('stopBtn').disabled = true;
+        return;
+      }
+      remaining -= 1;
+      const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+      const s = String(remaining % 60).padStart(2, '0');
+      ids('timer').textContent = `남은 시간: ${m}:${s}`;
+    }
+
+    ids('startBtn').addEventListener('click', () => {
+      const min = Number(ids('duration').value || 0);
+      if (min < 1) return alert('진행 시간(분)을 1 이상 입력하세요.');
+      remaining = min * 60;
+      tick();
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(tick, 1000);
+      ids('startBtn').disabled = true;
+      ids('stopBtn').disabled = false;
+    });
+
+    ids('stopBtn').addEventListener('click', () => {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      ids('startBtn').disabled = false;
+      ids('stopBtn').disabled = true;
+    });
+
+    ids('logForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      logs.push({
+        time: nowString(),
+        group: ids('group').value.trim(),
+        student: ids('student').value.trim(),
+        type: ids('type').value,
+        seconds: Number(ids('seconds').value),
+        content: ids('content').value.trim()
+      });
+      e.target.reset();
+      render();
+    });
+
+    ids('logTable').addEventListener('click', (e) => {
+      const idx = e.target.dataset.idx;
+      if (idx === undefined) return;
+      logs.splice(Number(idx), 1);
+      render();
+    });
+
+    ids('downloadCsv').addEventListener('click', () => {
+      const head = ['학급/반', '주제', '시각', '모둠', '이름', '유형', '시간(초)', '내용'];
+      const className = ids('className').value.trim();
+      const topic = ids('topic').value.trim();
+      const rows = logs.map(l => [className, topic, l.time, l.group, l.student, l.type, l.seconds, l.content]);
+      const csv = [head, ...rows]
+        .map(row => row.map(v => `"${String(v).replaceAll('"', '""')}"`).join(','))
+        .join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = '토론발언기록.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    ids('resetBtn').addEventListener('click', () => {
+      if (!confirm('모든 기록을 삭제할까요?')) return;
+      logs.length = 0;
+      render();
+    });
+  </script>
+</body>
+</html>
