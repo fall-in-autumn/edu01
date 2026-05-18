@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>모둠 토론 음성 기록·제출 페이지</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold">중1 모둠 토론 음성 기록장</h1>
+      <p class="text-sm text-slate-500 mt-2">학생이 발언을 녹음하면 자동으로 텍스트로 변환되고, 모둠 결과를 교사 제출용 파일로 저장할 수 있습니다.</p>
+    </header>
+
+    <section class="bg-white rounded-2xl shadow p-5 mb-6 grid md:grid-cols-4 gap-4">
+      <label class="block">
+        <span class="text-sm font-semibold">학급/반</span>
+        <input id="className" class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="예: 1학년 3반" />
+      </label>
+      <label class="block">
+        <span class="text-sm font-semibold">모둠 번호</span>
+        <input id="team" class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="예: 2모둠" />
+      </label>
+      <label class="block">
+        <span class="text-sm font-semibold">토론 주제</span>
+        <input id="topic" class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="예: 교복 자율화" />
+      </label>
+      <label class="block">
+        <span class="text-sm font-semibold">발언자 이름</span>
+        <input id="speaker" class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="예: 김민준" />
+      </label>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-5 mb-6">
+      <h2 class="text-xl font-bold mb-4">발언 녹음</h2>
+      <div class="grid md:grid-cols-5 gap-3 items-end">
+        <label class="block md:col-span-2">
+          <span class="text-sm font-semibold">토론 단계</span>
+          <select id="phase" class="mt-1 w-full border rounded-lg px-3 py-2">
+            <option value="입론">입론</option>
+            <option value="반론">반론</option>
+            <option value="교차조사">교차조사</option>
+            <option value="입장정리">입장정리</option>
+          </select>
+        </label>
+        <div class="md:col-span-3 flex gap-2">
+          <button id="startBtn" class="flex-1 bg-emerald-600 text-white rounded-lg px-3 py-2 font-semibold">녹음 시작</button>
+          <button id="stopBtn" class="flex-1 bg-slate-700 text-white rounded-lg px-3 py-2 font-semibold" disabled>녹음 종료</button>
+        </div>
+      </div>
+      <p id="status" class="mt-3 text-sm font-semibold text-slate-600">대기 중</p>
+      <div class="mt-3">
+        <label class="text-sm font-semibold">실시간 변환 텍스트</label>
+        <textarea id="liveText" class="mt-1 w-full border rounded-lg px-3 py-2 bg-slate-50" rows="4" placeholder="녹음 중 텍스트가 여기에 표시됩니다."></textarea>
+      </div>
+      <div class="mt-3 flex justify-end">
+        <button id="saveEntryBtn" class="bg-blue-600 text-white rounded-lg px-4 py-2 font-semibold" disabled>현재 발언 저장</button>
+      </div>
+      <p class="mt-2 text-xs text-amber-700">※ 크롬/엣지에서 가장 잘 동작합니다. 마이크 권한을 허용해야 텍스트 변환이 가능합니다.</p>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-5 mb-6">
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="text-xl font-bold">모둠 발언 기록</h2>
+        <button id="clearBtn" class="bg-rose-600 text-white rounded-lg px-3 py-2 text-sm font-semibold">기록 전체 삭제</button>
+      </div>
+      <div class="overflow-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-slate-100">
+              <th class="border p-2">시각</th>
+              <th class="border p-2">단계</th>
+              <th class="border p-2">발언자</th>
+              <th class="border p-2">변환 텍스트</th>
+              <th class="border p-2">삭제</th>
+            </tr>
+          </thead>
+          <tbody id="logTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-5">
+      <h2 class="text-xl font-bold mb-3">교사 제출</h2>
+      <div class="flex flex-wrap gap-2">
+        <button id="downloadTxt" class="bg-indigo-600 text-white rounded-lg px-4 py-2 font-semibold">제출용 TXT 다운로드</button>
+        <button id="downloadCsv" class="bg-indigo-500 text-white rounded-lg px-4 py-2 font-semibold">제출용 CSV 다운로드</button>
+        <button id="copyText" class="bg-slate-700 text-white rounded-lg px-4 py-2 font-semibold">전체 텍스트 복사</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const logs = [];
+    let recognition = null;
+    let recognizing = false;
+    let finalText = '';
+
+    const ids = (id) => document.getElementById(id);
+
+    function nowString() {
+      return new Date().toLocaleTimeString('ko-KR', { hour12: false });
+    }
+
+    function updateStatus(message, isError = false) {
+      const el = ids('status');
+      el.textContent = message;
+      el.className = `mt-3 text-sm font-semibold ${isError ? 'text-rose-700' : 'text-slate-600'}`;
+    }
+
+    function renderLogs() {
+      const tbody = ids('logTable');
+      tbody.innerHTML = '';
+
+      logs.forEach((log, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="border p-2">${log.time}</td>
+          <td class="border p-2">${log.phase}</td>
+          <td class="border p-2">${log.speaker}</td>
+          <td class="border p-2 whitespace-pre-wrap">${log.text}</td>
+          <td class="border p-2 text-center"><button data-idx="${idx}" class="text-rose-600 font-bold">X</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function setupRecognition() {
+      if (!SpeechRecognition) {
+        updateStatus('이 브라우저는 음성 텍스트 변환을 지원하지 않습니다. 크롬/엣지를 사용해 주세요.', true);
+        ids('startBtn').disabled = true;
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.lang = 'ko-KR';
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        recognizing = true;
+        updateStatus('녹음 중... 발언을 또박또박 말해 주세요.');
+        ids('startBtn').disabled = true;
+        ids('stopBtn').disabled = false;
+        ids('saveEntryBtn').disabled = true;
+      };
+
+      recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i += 1) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalText += `${transcript} `;
+          } else {
+            interim += transcript;
+          }
+        }
+        ids('liveText').value = `${finalText}${interim}`.trim();
+      };
+
+      recognition.onerror = (event) => {
+        updateStatus(`음성 인식 오류: ${event.error}`, true);
+      };
+
+      recognition.onend = () => {
+        recognizing = false;
+        ids('startBtn').disabled = false;
+        ids('stopBtn').disabled = true;
+        ids('saveEntryBtn').disabled = !ids('liveText').value.trim();
+        if (ids('liveText').value.trim()) {
+          updateStatus('녹음 종료. 내용을 확인한 뒤 "현재 발언 저장"을 눌러 주세요.');
+        } else {
+          updateStatus('녹음이 종료되었습니다. 다시 녹음해 주세요.');
+        }
+      };
+    }
+
+    ids('startBtn').addEventListener('click', () => {
+      if (!recognition) return;
+      const speaker = ids('speaker').value.trim();
+      if (!speaker) {
+        alert('발언자 이름을 먼저 입력해 주세요.');
+        return;
+      }
+      finalText = '';
+      ids('liveText').value = '';
+      recognition.start();
+    });
+
+    ids('stopBtn').addEventListener('click', () => {
+      if (recognition && recognizing) recognition.stop();
+    });
+
+    ids('saveEntryBtn').addEventListener('click', () => {
+      const text = ids('liveText').value.trim();
+      const speaker = ids('speaker').value.trim();
+      if (!speaker || !text) {
+        alert('발언자 이름과 변환 텍스트를 확인해 주세요.');
+        return;
+      }
+
+      logs.push({
+        time: nowString(),
+        phase: ids('phase').value,
+        speaker,
+        text
+      });
+
+      ids('liveText').value = '';
+      finalText = '';
+      ids('saveEntryBtn').disabled = true;
+      renderLogs();
+      updateStatus('발언이 저장되었습니다. 다음 학생 발언을 녹음해 주세요.');
+    });
+
+    ids('logTable').addEventListener('click', (event) => {
+      const idx = event.target.dataset.idx;
+      if (idx === undefined) return;
+      logs.splice(Number(idx), 1);
+      renderLogs();
+    });
+
+    ids('clearBtn').addEventListener('click', () => {
+      if (!confirm('모든 발언 기록을 삭제할까요?')) return;
+      logs.length = 0;
+      renderLogs();
+    });
+
+    function buildSubmissionText() {
+      const className = ids('className').value.trim() || '-';
+      const team = ids('team').value.trim() || '-';
+      const topic = ids('topic').value.trim() || '-';
+      const lines = [
+        `학급/반: ${className}`,
+        `모둠: ${team}`,
+        `토론 주제: ${topic}`,
+        `기록 생성 시각: ${new Date().toLocaleString('ko-KR')}`,
+        '----------------------------------------'
+      ];
+
+      logs.forEach((log, i) => {
+        lines.push(`${i + 1}. [${log.time}] (${log.phase}) ${log.speaker}`);
+        lines.push(`   ${log.text}`);
+      });
+
+      if (!logs.length) lines.push('기록 없음');
+      return lines.join('\n');
+    }
+
+    ids('downloadTxt').addEventListener('click', () => {
+      const txt = buildSubmissionText();
+      const blob = new Blob([txt], { type: 'text/plain;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = '모둠토론_제출기록.txt';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    ids('downloadCsv').addEventListener('click', () => {
+      const className = ids('className').value.trim();
+      const team = ids('team').value.trim();
+      const topic = ids('topic').value.trim();
+      const head = ['학급/반', '모둠', '토론주제', '시각', '단계', '발언자', '변환텍스트'];
+      const rows = logs.map(l => [className, team, topic, l.time, l.phase, l.speaker, l.text]);
+      const csv = [head, ...rows]
+        .map(row => row.map(v => `"${String(v).replaceAll('"', '""')}"`).join(','))
+        .join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = '모둠토론_제출기록.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    ids('copyText').addEventListener('click', async () => {
+      const txt = buildSubmissionText();
+      try {
+        await navigator.clipboard.writeText(txt);
+        updateStatus('전체 기록이 클립보드에 복사되었습니다.');
+      } catch {
+        updateStatus('클립보드 복사에 실패했습니다. TXT 다운로드를 사용해 주세요.', true);
+      }
+    });
+
+    setupRecognition();
+  </script>
+</body>
+</html>
